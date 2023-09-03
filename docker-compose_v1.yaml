@@ -1,0 +1,21 @@
+services:
+  database:
+    image: mongo:7.0.0
+    container_name: mongo
+    ports:
+      - 27017:27017
+  backend:
+    build: ./demo
+    container_name: demo
+    ports:
+      - 8080:80
+    depends_on:
+      - database
+
+  frontend:
+    build: ./demo-ui
+    container_name: demo_ui
+    ports:
+      - 4200:80
+    depends_on:
+      - backend

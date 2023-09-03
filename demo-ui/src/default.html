@@ -1,0 +1,157 @@
+<!--
+ Copyright 2018 ZTE Corporation.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base href="/iui/holmes/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./assets/thirdparty/js/jquery_1.12.4.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+        crossorigin="anonymous">
+
+    <style type="text/css">
+        .header {
+            height: 50px;
+            width: 100%;
+            background-color: #e0e0e0;
+            color: #333333;
+            padding-left: 20px;
+            padding-right: 20px;
+            border-bottom: 2px solid #d0d0d0d0;
+            padding: 0;
+        }
+
+        .header .title {
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bold;
+            font-size: 20px;
+            padding-left: 25px;
+            padding-top: 17px;
+        }
+
+        .logo-img {
+            margin-top: 8px;
+        }
+
+        .fl {
+            float: left;
+        }
+
+        .sidebar {
+            height: 100%;
+            background-color: #4d5b69;
+            width: 135px;
+            display: table-cell;
+        }
+
+        .body {
+            min-height: 500px;
+            padding: 0;
+        }
+
+        body {
+            margin: 0;
+        }
+
+        iframe {
+            margin: 0;
+            border: none;
+        }
+
+        .menu-item {
+            height: 120px;
+            color: #aaa;
+            text-align: center;
+        }
+
+        .menu-item:hover {
+            color: #FFF;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .menu-item-title {
+            height: 45px;
+            line-height: 25px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bold;
+        }
+
+        .menu-icon {
+            height: 75px;
+            line-height: 90px;
+            font-size: 35px;
+        }
+
+        .active {
+            color: #FFF;
+            background-color: #424e57;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="fl logo-img">
+            <img src="./assets/images/logo.png" alt="ONAP" />
+        </div>
+        <div class="fl title">
+            Holmes
+        </div>
+    </div>
+    <div class="body">
+        <div class="sidebar fl">
+            <div class="menu-item active" id="rule-mgmt">
+                <div class="menu-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="menu-item-title">Rules</div>
+            </div>
+        </div>
+        <div class="main fl">
+            <iframe src="/iui/holmes/#/alarmRule"></iframe>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+        var menus = {
+            "rule-mgmt": "/iui/holmes/#/alarmRule"
+        }
+
+        function adjustSizes() {
+            var height = $(window).height() - $(".header").outerHeight() - 4;
+            $(".sidebar").height(height);
+            $("iframe").height(height);
+            $(".main").height(height);
+            $("iframe").width($(window).width() - $(".sidebar").width());
+        }
+
+        $(function () {
+            $(window).on("resize", function () {
+                adjustSizes();
+            });
+            adjustSizes();
+
+            $(".menu-item").on("click", function () {
+                $("iframe")[0].src = menus[$(this).attr("id")];
+            })
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,123 @@
+package org.viettel.ocs.rulemgt.utils;
+
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+public class GsonUtil {
+    private static Gson gson = null;
+
+    static {
+        if (gson == null) {
+            gson = new GsonBuilder()
+                    .registerTypeAdapter(Integer.class, (JsonDeserializer<Integer>) (json, typeOfT, context) -> {
+                        try {
+                            return json.getAsInt();
+                        } catch (NumberFormatException e) {
+                            return 0;
+                        }
+                    })
+                    .registerTypeAdapter(Date.class, (JsonDeserializer<Date>) (jsonElement, type, jsonDeserializationContext) -> {
+                        try {
+                            return jsonElement == null ? null : new Date(jsonElement.getAsLong());
+                        } catch (NumberFormatException e) {
+                            return null;
+                        }
+                    })
+                    .registerTypeAdapter(Date.class, (JsonSerializer<Date>) (date, type, jsonSerializationContext)
+                            -> date == null ? null : new JsonPrimitive(date.getTime()))
+                    .create();
+        }
+    }
+
+    private GsonUtil() {
+    }
+
+
+    public static String beanToJson(Object object) {
+        String gsonString = null;
+        if (gson != null) {
+            gsonString = gson.toJson(object);
+        }
+        return gsonString;
+    }
+
+    public static <T> T jsonToBean(String gsonString, Class<T> cls) {
+        T t = null;
+        if (gson != null) {
+            t = gson.fromJson(gsonString, cls);
+        }
+        return t;
+    }
+
+    public static <T> List<T> jsonToList(String gsonString, Class<T> cls) {
+        List<T> list = null;
+        if (gson != null) {
+            list = gson.fromJson(gsonString, TypeToken.getParameterized(List.class, cls).getType());
+        }
+        return list;
+    }
+
+    public static <T> List<Map<String, T>> jsonToListMaps(String gsonString, Class<T> cls) {
+        List<Map<String, T>> list = null;
+        if (gson != null) {
+            list = gson.fromJson(gsonString,
+                    TypeToken.getParameterized(List.class,
+                            TypeToken.getParameterized(Map.class, String.class, cls).getType()
+                    ).getType()
+            );
+        }
+        return list;
+    }
+
+    public static <T> Map<String, T> jsonToMap(String gsonString, Class<T> cls) {
+        Map<String, T> map = null;
+        if (gson != null) {
+            map = gson.fromJson(gsonString, TypeToken.getParameterized(Map.class, String.class, cls).getType());
+        }
+        return map;
+    }
+
+    public static String getAsString(JsonObject o, String field) {
+        String ret = null;
+
+        if (field == null) {
+            field = StringUtils.EMPTY;
+        }
+
+        if (o.has(field) && !o.get(field).isJsonNull()) {
+            ret = o.get(field).getAsString();
+        }
+        return ret;
+    }
+
+    public static long getAsLong(JsonObject o, String field) {
+        long ret = 0;
+
+        if (field == null) {
+            field = StringUtils.EMPTY;
+        }
+
+        if (o.has(field) && !o.get(field).isJsonNull()) {
+            ret = o.get(field).getAsLong();
+        }
+        return ret;
+    }
+
+    public static int getAsInt(JsonObject o, String field) {
+        int ret = 0;
+
+        if (field == null) {
+            field = StringUtils.EMPTY;
+        }
+
+        if (o.has(field) && !o.get(field).isJsonNull()) {
+            ret = o.get(field).getAsInt();
+        }
+        return ret;
+    }
+}
